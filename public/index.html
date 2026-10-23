@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAYQAL FAMILY RESTAURANT — O'zbek Milliy Taomlari Maskani</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'display': ['Playfair Display', 'serif'],
+                        'body': ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        'primary': '#FF6B35',
+                        'secondary': '#F7931E',
+                        'accent': '#FFD23F',
+                        'dark': '#1A1A2E',
+                        'warm': '#EE6C4D',
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        * { scroll-behavior: smooth; }
+        body { font-family: 'Poppins', sans-serif; overflow-x: hidden; }
+        .font-display { font-family: 'Playfair Display', serif; }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #FF6B35 0%, #F7931E 50%, #FFD23F 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #FF6B35 0%, #F7931E 50%, #EE6C4D 100%);
+        }
+        
+        .card-hover {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .card-hover:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(255, 107, 53, 0.3);
+        }
+        
+        .menu-card {
+            transition: all 0.5s ease;
+            transform-style: preserve-3d;
+        }
+        .menu-card:hover {
+            transform: rotateY(5deg) rotateX(5deg) translateZ(20px);
+        }
+        
+        .floating { animation: float 3s ease-in-out infinite; }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .hero-bg {
+            background: linear-gradient(135deg, rgba(26, 26, 46, 0.85) 0%, rgba(255, 107, 53, 0.6) 100%),
+                        url('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=1920') center/cover;
+        }
+        
+        .nav-link { position: relative; transition: all 0.3s ease; }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px; left: 0;
+            width: 0; height: 2px;
+            background: linear-gradient(90deg, #FF6B35, #FFD23F);
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after { width: 100%; }
+        
+        .loader {
+            position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(135deg, #1A1A2E 0%, #FF6B35 100%);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        .loader.hidden { opacity: 0; visibility: hidden; }
+        
+        .spinner {
+            width: 60px; height: 60px;
+            border: 5px solid rgba(255, 210, 63, 0.3);
+            border-top-color: #FFD23F;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        .rating-star { color: #FFD23F; animation: pulse 2s infinite; }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        .btn-glow:hover {
+            animation: glow 1s ease-in-out infinite alternate;
+        }
+        @keyframes glow {
+            0% { box-shadow: 0 0 5px #FF6B35, 0 0 10px #FF6B35; }
+            100% { box-shadow: 0 0 20px #F7931E, 0 0 30px #F7931E; }
+        }
+        
+        .scroll-indicator { animation: bounce 2s infinite; }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+        
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: particleFloat 15s infinite;
+        }
+        @keyframes particleFloat {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translate(var(--tx), var(--ty)) rotate(360deg); opacity: 0; }
+        }
+        
+        .category-btn.active {
+            background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+            color: white;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <!-- Loader -->
+    <div class="loader" id="loader">
+        <div class="text-center">
+            <div class="spinner mx-auto mb-4"></div>
+            <p class="text-white text-xl font-display">SAYQAL</p>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="fixed w-full top-0 z-50 bg-white/95 backdrop-blur-md shadow-lg transition-all duration-300" id="header">
+        <nav class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-3" data-aos="fade-right">
+                    <div class="w-12 h-12 gradient-bg rounded-full flex items-center justify-center floating">
+                        <i class="fas fa-utensils text-white text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold gradient-text font-display">SAYQAL</h1>
+                        <p class="text-xs text-gray-600">Family Restaurant</p>
+                    </div>
+                </div>
+                
+                <ul class="hidden md:flex space-x-8 items-center">
+                    <li><a href="#home" class="nav-link text-gray-700 hover:text-primary font-medium">Bosh sahifa</a></li>
+                    <li><a href="#about" class="nav-link text-gray-700 hover:text-primary font-medium">Biz haqimizda</a></li>
+                    <li><a href="#menu" class="nav-link text-gray-700 hover:text-primary font-medium">Menyu</a></li>
+                    <li><a href="#contact" class="nav-link text-gray-700 hover:text-primary font-medium">Aloqa</a></li>
+                    <li>
+                        <a href="tel:+998901234567" class="gradient-bg text-white px-6 py-2 rounded-full font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-300 btn-glow">
+                            <i class="fas fa-phone mr-2"></i>Qo'ng'iroq
+                        </a>
+                    </li>
+                </ul>
+                
+                <button class="md:hidden text-2xl text-primary" id="mobileMenuBtn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            
+            <div class="hidden md:hidden mt-4 pb-4" id="mobileMenu">
+                <ul class="flex flex-col space-y-4">
+                    <li><a href="#home" class="block text-gray-700 hover:text-primary font-medium">Bosh sahifa</a></li>
+                    <li><a href="#about" class="block text-gray-700 hover:text-primary font-medium">Biz haqimizda</a></li>
+                    <li><a href="#menu" class="block text-gray-700 hover:text-primary font-medium">Menyu</a></li>
+                    <li><a href="#contact" class="block text-gray-700 hover:text-primary font-medium">Aloqa</a></li>
+                    <li>
+                        <a href="tel:+998901234567" class="block gradient-bg text-white px-6 py-2 rounded-full font-semibold text-center">
+                            <i class="fas fa-phone mr-2"></i>Qo'ng'iroq qilish
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-bg min-h-screen flex items-center justify-center relative overflow-hidden pt-20">
+        <div class="particle w-3 h-3 bg-accent/40" style="top: 20%; left: 10%; --tx: 100px; --ty: -200px; animation-delay: 0s;"></div>
+        <div class="particle w-4 h-4 bg-warm/40" style="top: 60%; left: 80%; --tx: -150px; --ty: -100px; animation-delay: 2s;"></div>
+        <div class="particle w-2 h-2 bg-secondary/40" style="top: 40%; left: 50%; --tx: 200px; --ty: 150px; animation-delay: 4s;"></div>
+        <div class="particle w-5 h-5 bg-primary/30" style="top: 80%; left: 20%; --tx: -100px; --ty: -300px; animation-delay: 6s;"></div>
+        
+        <div class="absolute top-20 left-10 w-20 h-20 bg-accent/20 rounded-full floating"></div>
+        <div class="absolute top-40 right-20 w-32 h-32 bg-warm/20 rounded-full floating" style="animation-delay: 1s;"></div>
+        <div class="absolute bottom-40 left-20 w-24 h-24 bg-secondary/20 rounded-full floating" style="animation-delay: 2s;"></div>
+        
+        <div class="container mx-auto px-4 text-center relative z-10">
+            <div data-aos="fade-up" data-aos-duration="1000">
+                <h1 class="text-5xl md:text-7xl lg:text-8xl font-bold text-white mb-6 font-display">
+                    <span class="gradient-text">SAYQAL</span><br>
+                    <span class="text-3xl md:text-5xl lg:text-6xl">FAMILY RESTAURANT</span>
+                </h1>
+            </div>
+            
+            <div data-aos="fade-up" data-aos-delay="200" data-aos-duration="1000">
+                <p class="text-xl md:text-2xl text-gray-200 mb-4 font-light">
+                    <i class="fas fa-star rating-star mr-2"></i>
+                    <i class="fas fa-star rating-star mr-2"></i>
+                    <i class="fas fa-star rating-star mr-2"></i>
+                    <i class="fas fa-star rating-star mr-2"></i>
+                    <i class="fas fa-star-half-alt rating-star mr-2"></i>
+                    <span class="text-accent font-semibold">4.1</span>
+                    <span class="text-gray-300">(266 ta sharh)</span>
+                </p>
+            </div>
+            
+            <div data-aos="fade-up" data-aos-delay="400" data-aos-duration="1000">
+                <p class="text-2xl md:text-3xl text-white mb-8 font-display italic">
+                    "O'zbek milliy taomlari maskani"
+                </p>
+            </div>
+            
+            <div data-aos="fade-up" data-aos-delay="600" class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="#menu" class="gradient-bg text-white px-8 py-4 rounded-full font-semibold text-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300 btn-glow">
+                    <i class="fas fa-utensils mr-2"></i>Menyuni ko'rish
+                </a>
+                <a href="#contact" class="bg-white/10 backdrop-blur-md text-white px-8 py-4 rounded-full font-semibold text-lg border-2 border-white/30 hover:bg-white hover:text-primary transform hover:scale-105 transition-all duration-300">
+                    <i class="fas fa-phone mr-2"></i>Biz bilan bog'laning
+                </a>
+            </div>
+            
+            <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 scroll-indicator">
+                <i class="fas fa-chevron-down text-white text-2xl"></i>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 bg-gradient-to-br from-gray-50 to-orange-50">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div data-aos="fade-right" data-aos-duration="1000">
+                    <div class="relative">
+                        <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800" 
+                             alt="Sayqal Restaurant" 
+                             class="rounded-2xl shadow-2xl transform hover:scale-105 transition-transform duration-500">
+                        <div class="absolute -bottom-6 -right-6 gradient-bg text-white p-6 rounded-2xl shadow-xl">
+                            <div class="text-4xl font-bold">15+</div>
+                            <div class="text-sm">Yillik tajriba</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div data-aos="fade-left" data-aos-duration="1000">
+                    <h2 class="text-4xl md:text-5xl font-bold mb-6 font-display">
+                        <span class="gradient-text">Biz haqimizda</span>
+                    </h2>
+                    <p class="text-gray-700 text-lg mb-6 leading-relaxed">
+                        <span class="text-primary font-semibold">Sayqal Family Restaurant</span> — Toshkentdagi eng mashhur va sevilgan ovqatlanish joylaridan biri. Biz 15 yildan ortiq vaqt davomida o'zbek milliy taomlarini tayyorlab, mehmonlarimizga oilaviy muhit va issiq munosabat bag'ishlab kelmoqdamiz.
+                    </p>
+                    <p class="text-gray-700 text-lg mb-8 leading-relaxed">
+                        Bizning oshpazlarimiz an'anaviy retseptlar asosida, sifatli mahsulotlardan foydalanib, har bir taomni sevimli va mazali qilishga harakat qilishadi. Ichkarida ovqatlanish, olib ketish va kontaktsetsiz yetkazib berish xizmatlari mavjud.
+                    </p>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="flex items-center space-x-3" data-aos="zoom-in" data-aos-delay="100">
+                            <div class="w-12 h-12 gradient-bg rounded-full flex items-center justify-center">
+                                <i class="fas fa-users text-white"></i>
+                            </div>
+                            <div>
+                                <div class="font-semibold text-gray-800">Oilaviy muhit</div>
+                                <div class="text-sm text-gray-600">Qulay joy</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-3" data-aos="zoom-in" data-aos-delay="200">
+                            <div class="w-12 h-12 gradient-bg rounded-full flex items-center justify-center">
+                                <i class="fas fa-award text-white"></i>
+                            </div>
+                            <div>
+                                <div class="font-semibold text-gray-800">Sifatli taomlar</div>
+                                <div class="text-sm text-gray-600">An'anaviy retseptlar</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-3" data-aos="zoom-in" data-aos-delay="300">
+                            <div class="w-12 h-12 gradient-bg rounded-full flex items-center justify-center">
+                                <i class="fas fa-truck text-white"></i>
+                            </div>
+                            <div>
+                                <div class="font-semibold text-gray-800">Tez yetkazish</div>
+                                <div class="text-sm text-gray-600">Kontaktsetsiz</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-3" data-aos="zoom-in" data-aos-delay="400">
+                            <div class="w-12 h-12 gradient-bg rounded-full flex items-center justify-center">
+                                <i class="fas fa-heart text-white"></i>
+                            </div>
+                            <div>
+                                <div class="font-semibold text-gray-800">Mehmondo'stlik</div>
+                                <div class="text-sm text-gray-600">Issiq munosabat</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Menu Section -->
+    <section id="menu" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12" data-aos="fade-up">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4 font-display">
+                    <span class="gradient-text">Bizning Menyu</span>
+                </h2>
+                <p class="text-gray-600 text-lg">O'zbek milliy taomlarining eng mazlilari</p>
+            </div>
+            
+            <!-- Category Filter -->
+            <div class="flex flex-wrap justify-center gap-3 mb-12" data-aos="fade-up">
+                <button class="category-btn active px-6 py-2 rounded-full border-2 border-primary font-semibold transition-all hover:shadow-lg" data-category="all">Barchasi</button>
+                <button class="category-btn px-6 py-2 rounded-full border-2 border-gray-200 text-gray-700 font-semibold transition-all hover:shadow-lg" data-category="main">Asosiy taomlar</button>
+                <button class="category-btn px-6 py-2 rounded-full border-2 border-gray-200 text-gray-700 font-semibold transition-all hover:shadow-lg" data-category="grill">Grill</button>
+                <button class="category-btn px-6 py-2 rounded-full border-2 border-gray-200 text-gray-700 font-semibold transition-all hover:shadow-lg" data-category="dough">Xamirli</button>
+                <button class="category-btn px-6 py-2 rounded-full border-2 border-gray-200 text-gray-700 font-semibold transition-all hover:shadow-lg" data-category="soup">Sho'rva</button>
+                <button class="category-btn px-6 py-2 rounded-full border-2 border-gray-200 text-gray-700 font-semibold transition-all hover:shadow-lg" data-category="drinks">Ichimliklar</button>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8" id="menuGrid">
+                <!-- Palov -->
+                <div class="menu-card bg-white rounded-2xl shadow-xl overflow-hidden card-hover" data-aos="fade-up" data-category="main">
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=600" alt="Palov" class="w-full h-full object-cover transform hover:scale-110 transition-transform duration-500">
+                        <div class="absolute top-4 left-4 bg-white/90 backdrop-blur-md text-primary px-4 py-1 rounded-full text-sm font-bold">
+                            <i class="fas fa-fire mr-1"></i>Hit
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="text-2xl font-bold text-gray-800 font-display">To'y Palov</h3>
+                            <span class="text-xs bg-primary/10 text-primary px-3 py-1 rounded-full font-semibold">Asosiy</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">An'anaviy o'zbek palovi, sifatli guruch, go'sht, sabzi va no'xat bilan tayyorlangan</p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center text-accent">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            </div>
+                            <span class="text-sm text-gray-500"><i class="fas fa-clock mr-1"></i>25 daq</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Shashlik -->
+                <div class="menu-card bg-white rounded-2xl shadow-xl overflow-hidden card-hover" data-aos="fade-up" data-category="grill">
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?w=600" alt="Shashlik" class="w-full h-full object-cover transform hover:scale-110 transition-transform duration-500">
+                        <div class="absolute top-4 left-4 bg-white/90 backdrop-blur-md text-primary px-4 py-1 rounded-full text-sm font-bold">
+                            <i class="fas fa-fire mr-1"></i>Mashhur
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="text-2xl font-bold text-gray-800 font-display">Mol go'shti Shashlig'i</h3>
+                            <span class="text-xs bg-primary/10 text-primary px-3 py-1 rounded-full font-semibold">Grill</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">Yangi mol go'shtidan tayyorlangan, maxsus ziravorlar va piyoz bilan mangalda pishirilgan</p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center text-accent">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                            </div>
+                            <span class="text-sm text-gray-500"><i class="fas fa-clock mr-1"></i>20 daq</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Manti -->
+                <div class="menu-card bg-white rounded-2xl shadow-xl overflow-hidden card-hover" data-aos="fade-up" data-category="dough">
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1625398407796-82650a8c135f?w=600" alt="Manti" class="w-full h-full object-cover transform hover:scale-110 transition-transform duration-500">
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="text-2xl font-bold text-gray-800 font-display">Qo'lda yopilgan Manti</h3>
+                            <span class="text-xs bg-primary/10 text-primary px-3 py-1 rounded-full font-semibold">Xamirli</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">Noyob retsept bo'yicha qo'lda yopilgan, go'shtli va piyozli, qatiq va sariyog' bilan</p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center text-accent">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            </div>
+                            <span class="text-sm text-gray-500"><i class="fas fa-clock mr-1"></i>30 daq</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Somsa -->
+                <div class="menu-card bg-white rounded-2xl shadow-xl overflow-hidden card-hover" data-aos="fade-up" data-category="dough">
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1601050690597-df0568f70950?w=600" alt="Somsa" class="w-full h-full object-cover transform hover:scale-110 transition-transform duration-500">
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="text-2xl font-bold text-gray-800 font-display">Tandir Somsa</h3>
+                            <span class="text-xs bg-primary/10 text-primary px-3 py-1 rounded-full font-semibold">Xamirli</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">An'anaviy usulda tandirda pishirilgan, go'shtli va piyozli somsalar, qarsildoq xamir bilan</p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center text-accent">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            </div>
+                            <span class="text-sm text-gray-500"><i class="fas fa-clock mr-1"></i>15 daq</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Lag'mon -->
+                <div class="menu-card bg-white rounded-2xl shadow-xl overflow-hidden card-hover" data-aos="fade-up" data-category="main">
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=600" alt="Lag'mon" class="w-full h-full object-cover transform hover:scale-110 transition-transform duration-500">
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="text-2xl font-bold text-gray-800 font-display">Qo'lda tortilgan Lag'mon</h3>
+                            <span class="text-xs bg-primary/10 text-primary px-3 py-1 rounded-full font-semibold">Asosiy</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">Yangi tayyorlangan qo'lda tortilgan xamir, go'shtli sous va sabzavotlar bilan</p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center text-accent">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                            </div>
+                            <span class="text-sm text-gray-500"><i class="fas fa-clock mr-1"></i>20 daq</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Sho'rva -->
+                <div class="menu-card bg-white rounded-2xl shadow-xl overflow-hidden card-hover" data-aos="fade-up" data-category="soup">
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1547592180-85f173990554?w=600" alt="Sho'rva" class="w-full h-full object-cover transform hover:scale-110 transition-transform duration-500">
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="text-2xl font-bold text-gray-800 font-display">Mastava</h3>
+                            <span class="text-xs bg-primary/10 text-primary px-3 py-1 rounded-full font-semibold">Sho'rva</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">Guruchli, go'shtli va sabzavotli an'anaviy o'zbek sho'rvasi, ko'katlar bilan</p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center text-accent">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            </div>
+                            <span class="text-sm text-gray-500"><i class="fas fa-clock mr-1"></i>15 daq</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Choy -->
+                <div class="menu-card bg-white rounded-2xl shadow-xl overflow-hidden card-hover" data-aos="fade-up" data-category="drinks">
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1571934811356-5cc061b6821f?w=600" alt="Choy" class="w-full h-full object-cover transform hover:scale-110 transition-transform duration-500">
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="text-2xl font-bold text-gray-800 font-display">Ko'k Choy</h3>
+                            <span class="text-xs bg-primary/10 text-primary px-3 py-1 rounded-full font-semibold">Ichimlik</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">An'anaviy o'zbek ko'k choyi, chinni choynakda, qaynoq holda tortiq etiladi</p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center text-accent">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            </div>
+                            <span class="text-sm text-gray-500"><i class="fas fa-clock mr-1"></i>5 daq</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Norin -->
+                <div class="menu-card bg-white rounded-2xl shadow-xl overflow-hidden card-hover" data-aos="fade-up" data-category="main">
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1585032226651-759b368d7246?w=600" alt="Norin" class="w-full h-full object-cover transform hover:scale-110 transition-transform duration-500">
+                        <div class="absolute top-4 left-4 bg-white/90 backdrop-blur-md text-primary px-4 py-1 rounded-full text-sm font-bold">
+                            <i class="fas fa-crown mr-1"></i>Maxsus
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="text-2xl font-bold text-gray-800 font-display">Norin</h3>
+                            <span class="text-xs bg-primary/10 text-primary px-3 py-1 rounded-full font-semibold">Asosiy</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">Qo'lda yoyilgan xamir, maydalangan go'sht va piyoz bilan tayyorlangan milliy taom</p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center text-accent">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            </div>
+                            <span class="text-sm text-gray-500"><i class="fas fa-clock mr-1"></i>25 daq</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Kompot -->
+                <div class="menu-card bg-white rounded-2xl shadow-xl overflow-hidden card-hover" data-aos="fade-up" data-category="drinks">
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1544145945-f90425340c7e?w=600" alt="Kompot" class="w-full h-full object-cover transform hover:scale-110 transition-transform duration-500">
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="text-2xl font-bold text-gray-800 font-display">Uy Kompoti</h3>
+                            <span class="text-xs bg-primary/10 text-primary px-3 py-1 rounded-full font-semibold">Ichimlik</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">Mavsumiy mevalardan tayyorlangan uy sharoitidagi sovutilgan kompot</p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center text-accent">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                            </div>
+                            <span class="text-sm text-gray-500"><i class="fas fa-clock mr-1"></i>5 daq</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Working Hours & Location -->
+    <section id="hours" class="py-20 bg-gradient-to-br from-dark to-primary/20 text-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4 font-display">
+                    <span class="gradient-text">Ish vaqti va Manzil</span>
+                </h2>
+                <p class="text-gray-300 text-lg">Biz sizni har kuni kutib olamiz</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-12">
+                <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 shadow-2xl" data-aos="fade-right">
+                    <h3 class="text-3xl font-bold mb-6 flex items-center">
+                        <i class="fas fa-clock text-accent mr-3"></i>Ish vaqti
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center py-3 border-b border-white/20 hover:bg-white/5 rounded-lg px-4 transition-all">
+                            <span class="text-lg font-medium">Dushanba</span>
+                            <span class="text-accent font-bold">09:00 - 23:00</span>
+                        </div>
+                        <div class="flex justify-between items-center py-3 border-b border-white/20 hover:bg-white/5 rounded-lg px-4 transition-all">
+                            <span class="text-lg font-medium">Seshanba</span>
+                            <span class="text-accent font-bold">09:00 - 23:00</span>
+                        </div>
+                        <div class="flex justify-between items-center py-3 border-b border-white/20 hover:bg-white/5 rounded-lg px-4 transition-all">
+                            <span class="text-lg font-medium">Chorshanba</span>
+                            <span class="text-accent font-bold">09:00 - 23:00</span>
+                        </div>
+                        <div class="flex justify-between items-center py-3 border-b border-white/20 hover:bg-white/5 rounded-lg px-4 transition-all">
+                            <span class="text-lg font-medium">Payshanba</span>
+                            <span class="text-accent font-bold">09:00 - 23:00</span>
+                        </div>
+                        <div class="flex justify-between items-center py-3 border-b border-white/20 hover:bg-white/5 rounded-lg px-4 transition-all">
+                            <span class="text-lg font-medium">Juma</span>
+                            <span class="text-accent font-bold">09:00 - 23:00</span>
+                        </div>
+                        <div class="flex justify-between items-center py-3 border-b border-white/20 hover:bg-white/5 rounded-lg px-4 transition-all">
+                            <span class="text-lg font-medium">Shanba</span>
+                            <span class="text-accent font-bold">09:00 - 23:00</span>
+                        </div>
+                        <div class="flex justify-between items-center py-3 hover:bg-white/5 rounded-lg px-4 transition-all">
+                            <span class="text-lg font-medium">Yakshanba</span>
+                            <span class="text-accent font-bold">09:00 - 23:00</span>
+                        </div>
+                    </div>
+                    <div class="mt-6 p-4 bg-accent/20 rounded-xl">
+                        <p class="text-center text-accent font-semibold">
+                            <i class="fas fa-info-circle mr-2"></i>Dam olish kunlari yo'q — har kuni ochiq!
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 shadow-2xl" data-aos="fade-left">
+                    <h3 class="text-3xl font-bold mb-6 flex items-center">
+                        <i class="fas fa-map-marker-alt text-accent mr-3"></i>Manzil
+                    </h3>
+                    <div class="mb-6">
+                        <p class="text-lg mb-2"><i class="fas fa-location-dot text-primary mr-2"></i><strong>Manzil:</strong></p>
+                        <p class="text-gray-300 ml-6">7556+RPR, Toshkent shahri</p>
+                        <p class="text-gray-300 ml-6">Toshkent viloyati, O'zbekiston</p>
+                    </div>
+                    <div class="rounded-xl overflow-hidden shadow-lg mb-6">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2996.508382979463!2d69.2794!3d41.3111!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDHCsDE4JzQwLjAiTiA2OcKwMTYnNDUuOCJF!5e0!3m2!1suz!2s!4v1234567890" width="100%" height="250" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                    </div>
+                    <a href="https://maps.google.com/?q=7556+RPR+Tashkent" target="_blank" class="block w-full gradient-bg text-white text-center py-3 rounded-xl font-semibold hover:shadow-lg transform hover:scale-105 transition-all">
+                        <i class="fas fa-directions mr-2"></i>Xaritada ko'rish
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 bg-gradient-to-br from-orange-50 to-yellow-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4 font-display">
+                    <span class="gradient-text">Biz bilan bog'laning</span>
+                </h2>
+                <p class="text-gray-600 text-lg">Savollaringiz bormi? Biz bilan bog'laning!</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Phone -->
+                <a href="tel:+998901234567" class="text-center p-8 bg-white rounded-2xl card-hover shadow-lg" data-aos="zoom-in" data-aos-delay="100">
+                    <div class="w-20 h-20 gradient-bg rounded-full flex items-center justify-center mx-auto mb-4 floating">
+                        <i class="fas fa-phone text-white text-3xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-2">Telefon</h3>
+                    <p class="text-gray-600 mb-4">Qo'ng'iroq qiling</p>
+                    <p class="text-primary font-semibold text-lg">+998 90 123 45 67</p>
+                </a>
+                
+                <!-- Email -->
+                <a href="mailto:info@sayqal.uz" class="text-center p-8 bg-white rounded-2xl card-hover shadow-lg" data-aos="zoom-in" data-aos-delay="200">
+                    <div class="w-20 h-20 gradient-bg rounded-full flex items-center justify-center mx-auto mb-4 floating" style="animation-delay: 0.5s;">
+                        <i class="fas fa-envelope text-white text-3xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-2">Email</h3>
+                    <p class="text-gray-600 mb-4">Xat yuboring</p>
+                    <p class="text-primary font-semibold text-lg">info@sayqal.uz</p>
+                </a>
+                
+                <!-- Instagram -->
+                <a href="https://instagram.com/sayqalrestaurant" target="_blank" class="text-center p-8 bg-white rounded-2xl card-hover shadow-lg" data-aos="zoom-in" data-aos-delay="300">
+                    <div class="w-20 h-20 bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 rounded-full flex items-center justify-center mx-auto mb-4 floating" style="animation-delay: 1s;">
+                        <i class="fab fa-instagram text-white text-3xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-2">Instagram</h3>
+                    <p class="text-gray-600 mb-4">Obuna bo'ling</p>
+                    <p class="text-pink-500 font-semibold text-lg">@sayqalrestaurant</p>
+                </a>
+                
+                <!-- Telegram -->
+                <a href="https://t.me/sayqalrestaurant" target="_blank" class="text-center p-8 bg-white rounded-2xl card-hover shadow-lg" data-aos="zoom-in" data-aos-delay="400">
+                    <div class="w-20 h-20 bg-gradient-to-br from-sky-400 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-4 floating" style="animation-delay: 1.5s;">
+                        <i class="fab fa-telegram text-white text-3xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-2">Telegram</h3>
+                    <p class="text-gray-600 mb-4">Kanalimiz</p>
+                    <p class="text-blue-500 font-semibold text-lg">@sayqalrestaurant</p>
+                </a>
+            </div>
+            
+            <!-- Address Card -->
+            <div class="mt-12 bg-white rounded-2xl shadow-xl p-8 md:p-12" data-aos="fade-up">
+                <div class="grid md:grid-cols-2 gap-8 items-center">
+                    <div>
+                        <h3 class="text-3xl font-bold text-gray-800 mb-4 font-display">
+                            <i class="fas fa-map-marker-alt text-primary mr-2"></i>Bizni toping
+                        </h3>
+                        <p class="text-gray-600 text-lg mb-4">
+                            <strong>Manzil:</strong> 7556+RPR, Toshkent shahri, O'zbekiston
+                        </p>
+                        <p class="text-gray-600 text-lg mb-6">
+                            <strong>Ish vaqti:</strong> Har kuni 09:00 dan 23:00 gacha
+                        </p>
+                        <div class="flex flex-wrap gap-3">
+                            <a href="tel:+998901234567" class="gradient-bg text-white px-6 py-3 rounded-full font-semibold hover:shadow-lg transform hover:scale-105 transition-all">
+                                <i class="fas fa-phone mr-2"></i>+998 90 123 45 67
+                            </a>
+                            <a href="https://t.me/sayqalrestaurant" target="_blank" class="bg-blue-500 text-white px-6 py-3 rounded-full font-semibold hover:shadow-lg transform hover:scale-105 transition-all">
+                                <i class="fab fa-telegram mr-2"></i>Telegram
+                            </a>
+                            <a href="https://instagram.com/sayqalrestaurant" target="_blank" class="bg-gradient-to-r from-purple-500 via-pink-500 to-orange-400 text-white px-6 py-3 rounded-full font-semibold hover:shadow-lg transform hover:scale-105 transition-all">
+                                <i class="fab fa-instagram mr-2"></i>Instagram
+                            </a>
+                        </div>
+                    </div>
+                    <div class="rounded-xl overflow-hidden shadow-lg">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2996.508382979463!2d69.2794!3d41.3111!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDHCsDE4JzQwLjAiTiA2OcKwMTYnNDUuOCJF!5e0!3m2!1suz!2s!4v1234567890" width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-4 gap-8 mb-8">
+                <div class="md:col-span-2">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="w-12 h-12 gradient-bg rounded-full flex items-center justify-center">
+                            <i class="fas fa-utensils text-white text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-bold gradient-text font-display">SAYQAL</h3>
+                            <p class="text-xs text-gray-400">Family Restaurant</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 mb-4">O'zbek milliy taomlarining eng mazlilari. Oilaviy muhit va sifatli xizmat bizning asosiy qadriyatlarimiz.</p>
+                    <div class="flex space-x-4">
+                        <a href="https://instagram.com/sayqalrestaurant" target="_blank" class="w-10 h-10 bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 rounded-full flex items-center justify-center hover:scale-110 transition-transform">
+                            <i class="fab fa-instagram text-white"></i>
+                        </a>
+                        <a href="https://t.me/sayqalrestaurant" target="_blank" class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center hover:scale-110 transition-transform">
+                            <i class="fab fa-telegram text-white"></i>
+                        </a>
+                        <a href="tel:+998901234567" class="w-10 h-10 gradient-bg rounded-full flex items-center justify-center hover:scale-110 transition-transform">
+                            <i class="fas fa-phone text-white"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 gradient-bg rounded-full flex items-center justify-center hover:scale-110 transition-transform">
+                            <i class="fab fa-facebook-f text-white"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 gradient-bg rounded-full flex items-center justify-center hover:scale-110 transition-transform">
+                            <i class="fab fa-youtube text-white"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-bold mb-4 text-accent">Tezkor havolalar</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#home" class="text-gray-400 hover:text-primary transition-colors">Bosh sahifa</a></li>
+                        <li><a href="#about" class="text-gray-400 hover:text-primary transition-colors">Biz haqimizda</a></li>
+                        <li><a href="#menu" class="text-gray-400 hover:text-primary transition-colors">Menyu</a></li>
+                        <li><a href="#hours" class="text-gray-400 hover:text-primary transition-colors">Ish vaqti</a></li>
+                        <li><a href="#contact" class="text-gray-400 hover:text-primary transition-colors">Aloqa</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-bold mb-4 text-accent">Aloqa</h4>
+                    <ul class="space-y-3 text-gray-400">
+                        <li class="flex items-start"><i class="fas fa-map-marker-alt text-primary mt-1 mr-2"></i><span>7556+RPR, Toshkent, O'zbekiston</span></li>
+                        <li class="flex items-center"><i class="fas fa-phone text-primary mr-2"></i><a href="tel:+998901234567" class="hover:text-primary transition-colors">+998 90 123 45 67</a></li>
+                        <li class="flex items-center"><i class="fas fa-envelope text-primary mr-2"></i><a href="mailto:info@sayqal.uz" class="hover:text-primary transition-colors">info@sayqal.uz</a></li>
+                        <li class="flex items-center"><i class="fab fa-instagram text-primary mr-2"></i><a href="https://instagram.com/sayqalrestaurant" target="_blank" class="hover:text-primary transition-colors">@sayqalrestaurant</a></li>
+                        <li class="flex items-center"><i class="fab fa-telegram text-primary mr-2"></i><a href="https://t.me/sayqalrestaurant" target="_blank" class="hover:text-primary transition-colors">@sayqalrestaurant</a></li>
+                        <li class="flex items-center"><i class="fas fa-clock text-primary mr-2"></i><span>Har kuni: 09:00 - 23:00</span></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 pt-8 text-center">
+                <p class="text-gray-400">&copy; 2026 <span class="gradient-text font-semibold">Sayqal Family Restaurant</span>. Barcha huquqlar himoyalangan.</p>
+                <p class="text-gray-500 text-sm mt-2">Sevgi va hurmat bilan tayyorlandi <i class="fas fa-heart text-red-500"></i></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scroll to Top Button -->
+    <button id="scrollTopBtn" class="fixed bottom-8 right-8 w-12 h-12 gradient-bg text-white rounded-full shadow-lg hidden hover:scale-110 transition-transform z-50">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({ duration: 1000, once: true, offset: 100 });
+
+        window.addEventListener('load', () => {
+            setTimeout(() => document.getElementById('loader').classList.add('hidden'), 1000);
+        });
+
+        // Mobile Menu
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            const icon = mobileMenuBtn.querySelector('i');
+            icon.classList.toggle('fa-bars');
+            icon.classList.toggle('fa-times');
+        });
+
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+                const icon = mobileMenuBtn.querySelector('i');
+                icon.classList.add('fa-bars');
+                icon.classList.remove('fa-times');
+            });
+        });
+
+        // Header scroll
+        const header = document.getElementById('header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) {
+                header.classList.add('shadow-2xl');
+                header.style.padding = '0.5rem 0';
+            } else {
+                header.classList.remove('shadow-2xl');
+                header.style.padding = '1rem 0';
+            }
+        });
+
+        // Scroll to top
+        const scrollTopBtn = document.getElementById('scrollTopBtn');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 500) scrollTopBtn.classList.remove('hidden');
+            else scrollTopBtn.classList.add('hidden');
+        });
+        scrollTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+        // Menu Category Filter
+        const categoryBtns = document.querySelectorAll('.category-btn');
+        const menuItems = document.querySelectorAll('#menuGrid .menu-card');
+        
+        categoryBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                categoryBtns.forEach(b => {
+                    b.classList.remove('active');
+                    b.classList.add('border-gray-200', 'text-gray-700');
+                });
+                btn.classList.add('active');
+                btn.classList.remove('border-gray-200', 'text-gray-700');
+                
+                const category = btn.dataset.category;
+                
+                menuItems.forEach(item => {
+                    if (category === 'all' || item.dataset.category === category) {
+                        item.style.display = 'block';
+                        item.style.animation = 'fadeIn 0.5s ease';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (href === '#') return;
+                e.preventDefault();
+                const target = document.querySelector(href);
+                if (target) {
+                    const headerOffset = 80;
+                    const elementPosition = target.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                    window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

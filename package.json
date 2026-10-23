@@ -1,0 +1,20 @@
+{
+  "name": "sayqal-family-restaurant",
+  "version": "1.0.0",
+  "description": "Sayqal Family Restaurant - O'zbek milliy taomlari maskani",
+  "main": "public/index.html",
+  "scripts": {
+    "dev": "echo 'Static site - no build required'",
+    "build": "echo 'Static site - no build required'",
+    "start": "echo 'Static site - no build required'"
+  },
+  "keywords": [
+    "restaurant",
+    "uzbek",
+    "food",
+    "sayqal",
+    "tashkent"
+  ],
+  "author": "Sayqal Family Restaurant",
+  "license": "MIT"
+}
